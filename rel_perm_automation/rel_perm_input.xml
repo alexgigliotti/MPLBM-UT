@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<geometry>
+    <!-- The name of the .dat file that contains the entire geometry-->
+    <file_geom> input/300_RG_theta60por1000_geometry_305_300_300 </file_geom>
+    <!-- Size (in voxels) of the simulation domain. -->
+    <size> <x> 305 </x> <y> 300 </y> <z> 300 </z> </size>
+</geometry>
+
+<folder>
+    <!-- Output folder -->
+    <out_f> /workspace/gigliotti/mpmp_automation/tmp/rel_perm_calculation/output/ </out_f>
+    <!-- Input folder -->
+    <in_f> /workspace/gigliotti/mpmp_automation/tmp/rel_perm_calculation/fluid_geometry_input/ </in_f>
+</folder>
+
+<simulations>
+	<!-- Total number of geometries / individual simulations -->
+    <num> 76 </num>
+	<!-- Pressure-->
+    <press> 0.0005 </press>
+	<!-- Max iterations-->
+    <iter> 4000 </iter>
+</simulations>
+
