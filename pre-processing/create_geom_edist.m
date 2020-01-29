@@ -1,9 +1,9 @@
-function [geom4palabos]=create_geom_edist(data,name,num_slices,add_mesh,swapXZ,scale_2)
+function [geom4palabos]=create_geom_edist(data,name,num_slices,add_mesh,swapXZ,scale_2,output_dir)
 
 %%%% Inputs:
 % data: image, where the pore-space is represented with zeros
 % name: string with the name of the file for printing
-
+% output_dir: string with where to save the geometry file
 tic
 
 % Swap x and z data if needed to ensure Palabos simulation in Z-direction
@@ -48,7 +48,7 @@ geom4palabos = cat(1, geom4palabos, blank_slice);
 geom_name = [name '_' num2str( size(geom4palabos,1) ) '_' ...
      num2str( size(geom4palabos,2) ) '_' num2str( size(geom4palabos,3) ) '.dat'];
  
-fid = fopen(['input/' geom_name], 'w'); % open the output file to write in
+fid = fopen([output_dir '/' geom_name], 'w'); % open the output file to write in
 
 for x_coor=1:size(geom4palabos,1)
     fprintf(fid, '%i\n', squeeze( geom4palabos(x_coor,:,:) ) );
