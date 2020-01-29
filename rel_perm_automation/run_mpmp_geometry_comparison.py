@@ -7,6 +7,13 @@ import fileinput
 import sys
 from datetime import datetime
 
+# Todo
+# 1) Get this working
+# 2) Write readme
+# 3) Have everything in this file. Move bash file commands to this script
+# 4) Create yaml input file for easy changes
+
+
 class AutomatedMPMP():
 
     def __init__(self):
@@ -19,6 +26,9 @@ class AutomatedMPMP():
 
         # Set output directory
         self.output_directory = '/storage/gigliotti/geometry_comparison_test'
+
+        # Size of the downloaded raw geometry (voxels per side)
+        self.raw_geometry_size = 500
 
         # Set simulation size
         nx = 205
@@ -74,8 +84,9 @@ class AutomatedMPMP():
         geom_names = self.geometry_names
         Nx = self.simulation_size[0]
         output_dir = self.output_directory
+        geom_size = self.raw_geometry_size
        
-        file_to_edit = "create_geometry.m"
+        file_to_edit = "create_geom_4sim.m"
         line_to_find_and_replace = 'raw_geometry_file_to_open ='
         replacement_line = "raw_geometry_file_to_open = '" + output_dir + "/tmp/raw_geometry/" + geom_names[i] + ".raw';"
         self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
@@ -88,7 +99,15 @@ class AutomatedMPMP():
         replacement_line = "print_size = " + str(Nx-5) + "; %size of the Finneypack subset (in voxels per side)"
         self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
 
-        os.system('matlab -r "create_geometry; exit"')
+        line_to_find_and_replace = 'd_size ='
+        replacement_line = "d_size = " + str(geom_size) + "; %voxels each side"
+        self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
+
+        line_to_find_and_replace = 'output_directory_for_geometry ='
+        replacement_line = "output_directory_for_geometry = '" + output_dir + "/tmp/2_phase_shanchen_output/fluid_geometry_files/input/'"
+        self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
+
+        os.system('matlab -r "create_geom_4sim; exit"')
     
         return
     
@@ -164,15 +183,9 @@ class AutomatedMPMP():
 
     def create_geometry_for_rel_perms(self):
         output_dir = self.output_directory
+
         # Generate geometry files for rel perm calculation
-
-
-
-        #### MAKE SURE TO CHANGE MPMP_fork TO ACTUAL NAME LATER!!!
-        
-
-
-        add_path = "addpath('/workspace/gigliotti/MultiphasePorousMediaPalabos_fork/post-processing');"
+        add_path = "addpath('../post-processing');"
         os.system('matlab -r "' + add_path +' read_save_fluids; exit"')
 
         # Organize output
@@ -301,7 +314,7 @@ for i in range(len(mpmp.geometry_names)):
     mpmp.download_geometry_file(i)
     
     # 3) Update file names in matlab file
-    # mpmp.update_and_run_geometry_creation_matlab_file(i)
+    mpmp.update_and_run_geometry_creation_matlab_file(i)
     
     # 4) Edit xml input for Shan Chen
     # mpmp.update_2_phase_shan_chen_input_file(i)
@@ -328,4 +341,6 @@ for i in range(len(mpmp.geometry_names)):
     # 11) Email when done with the time!
     end_time = datetime.now() - start_time
     # mpmp.email_when_done(i, end_time)
+
+    break  # delete after testing!!
 
