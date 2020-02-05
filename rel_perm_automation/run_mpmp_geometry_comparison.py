@@ -114,23 +114,40 @@ class AutomatedMPMP():
     def update_2_phase_shan_chen_input_file(self, i):
         geom_names = self.geometry_names
         sim_size = self.simulation_size
-        
-        # sed -i "/<file_geom>/c\    <file_geom> tmp/hello/image.raw </file_geom>" shan_chen_test.txt
-        # finney_pack_geometry_105_100_100.dat
+        output_dir = self.output_directory
+
+        # Update 2_phase_input.xml
         file_to_edit = '2_phase_input.xml'
+
+        # Update geometry file location
         line_to_find_and_replace = '    <file_geom>'
-        replacement_line = "    <file_geom> input/" + geom_names[i] + "_geometry_" + \
+        replacement_line = "    <file_geom> "+ output_dir + "/tmp/2_phase_shanchen_output/fluid_geometry_files/input/" + geom_names[i] + "_geometry_" + \
                            str(sim_size[0]) + "_" + str(sim_size[1]) + "_" + str(sim_size[2]) \
                            + ".dat" + " </file_geom>"
         self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
 
-        # <size> <x> 105 </x> <y> 100 </y> <z> 100 </z> </size>
-        file_to_edit = '2_phase_input.xml'
+        # Update simulation size
         line_to_find_and_replace = '    <size> <x>'
         replacement_line = "    <size> <x> " + str(sim_size[0]) + " </x> <y> " + str(sim_size[1]) + \
                            " </y> <z> " + str(sim_size[2]) + " </z> </size>"
         self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
         
+        # Update fluid 1 and 2 initial position
+        line_to_find_and_replace = '    <fluid1> <x1>'
+        replacement_line = "    <fluid1> <x1> 001 </x1> <y1> 001 </y1> <z1> 001 </z1> " + \
+                           "<x2> 002 </x2> <y2> " + str(sim_size[1]) + " </y2> <z2> " + str(sim_size[2]) + " </z2> </fluid1>"
+        self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
+
+        line_to_find_and_replace = '    <fluid2> <x1>'
+        replacement_line = "    <fluid2> <x1> 003 </x1> <y1> 001 </y1> <z1> 001 </z1> " + \
+                           "<x2> " + str(sim_size[0]) + " </x2> <y2> " + str(sim_size[1]) + " </y2> <z2> " + str(sim_size[2]) + " </z2> </fluid2>"
+        self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
+
+        # Update output directory
+        line_to_find_and_replace = '    <out_folder>'
+        replacement_line = "    <out_folder> " + output_dir + "/tmp/2_phase_shanchen_output/ </out_folder>"
+        self.replace_line_in_file(file_to_edit, line_to_find_and_replace, replacement_line)
+
         return
  
     def run_shan_chen_lbm_simulation(self):
@@ -317,30 +334,30 @@ for i in range(len(mpmp.geometry_names)):
     mpmp.update_and_run_geometry_creation_matlab_file(i)
     
     # 4) Edit xml input for Shan Chen
-    # mpmp.update_2_phase_shan_chen_input_file(i)
+    mpmp.update_2_phase_shan_chen_input_file(i)
 
     # 5) Run Shan Chen
-    # mpmp.run_shan_chen_lbm_simulation()
+    mpmp.run_shan_chen_lbm_simulation()
  
     # 6) Update xml input file for rel perms
-    # mpmp.update_rel_perm_input_file(i)
+    mpmp.update_rel_perm_input_file(i)
 
     # 7) Generate geometries for rel perms
-    # mpmp.create_geometry_for_rel_perms()    
+    mpmp.create_geometry_for_rel_perms()    
 
     # 8) Run Rel Perm simulation
-    # mpmp.run_rel_perm_simulation()
+    mpmp.run_rel_perm_simulation()
 
     # 9) Save results and clear tmp/ for next simulation
-    # mpmp.save_results_and_clear_temp(i)
+    mpmp.save_results_and_clear_temp(i)
 
     # 10) Parse data and create plots
-    # mpmp.parse_simulation_data(i)
-    # mpmp.plot_results(i)
+    mpmp.parse_simulation_data(i)
+    mpmp.plot_results(i)
 
     # 11) Email when done with the time!
     end_time = datetime.now() - start_time
-    # mpmp.email_when_done(i, end_time)
+    mpmp.email_when_done(i, end_time)
 
     break  # delete after testing!!
 
