@@ -15,11 +15,15 @@
 </folder>
 
 <simulations>
-	<!-- Total number of geometries / individual simulations -->
+    <!-- Total number of geometries / individual simulations -->
     <num> 76 </num>
-	<!-- Pressure-->
+    <!-- Pressure-->
     <press> 0.0005 </press>
-	<!-- Max iterations-->
+    <!-- Max iterations-->
     <iter> 4000 </iter>
+    <!-- Convergence-->
+    <conv> 0.01 </conv>
+    <!-- Save vtks for medium and velocity-->
+    <vtk_out> false </vtk_out>
 </simulations>
 

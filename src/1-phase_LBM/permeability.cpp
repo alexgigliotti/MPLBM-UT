@@ -363,7 +363,6 @@ void porousMediaSetup(MultiBlockLattice3D<T,DESCRIPTOR>& lattice,
     std::ofstream permFile(filename_perm);
     std::ofstream relpermFile(filename_relperm);
     ofile << "Krw from run: " << "\n" << "Krnw from run: " << (run_diff+1) << std::endl;
-    for (plint runs = 1; runs <= runnum; ++runs) {
 
     for (plint runs = 1; runs <= runnum; ++runs) {
 
