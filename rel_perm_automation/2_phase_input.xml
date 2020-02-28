@@ -5,9 +5,9 @@
 
 <geometry>
     <!-- The name of the .dat file that with the geometry. -->
-    <file_geom> /storage/gigliotti/geometry_comparison_test/tmp/2_phase_shanchen_output/fluid_geometry_files/input/200_finney_pack_geometry_205_200_200.dat </file_geom>
+    <file_geom> /storage/gigliotti/geometry_comparison_test/tmp/2_phase_shanchen_output/fluid_geometry_files/input/250_finney_pack_oil_water_geometry_255_250_250.dat </file_geom>
     <!-- Size (in voxels) of the simulation domain. -->
-    <size> <x> 205 </x> <y> 200 </y> <z> 200 </z> </size>
+    <size> <x> 255 </x> <y> 250 </y> <z> 250 </z> </size>
     <!-- Periodicity in the boundary conditions -->
     <per>
           <fluid1> <x> false </x> <y> false </y> <z> false </z> </fluid1>
@@ -18,28 +18,28 @@
 
 <init>
   <!-- Initial position of fluid 1 -->
-    <fluid1> <x1> 001 </x1> <y1> 001 </y1> <z1> 001 </z1> <x2> 002 </x2> <y2> 200 </y2> <z2> 200 </z2> </fluid1>
+    <fluid1> <x1> 001 </x1> <y1> 001 </y1> <z1> 001 </z1> <x2> 002 </x2> <y2> 250 </y2> <z2> 250 </z2> </fluid1>
   <!-- Initial position of fluid 2  -->
-    <fluid2> <x1> 003 </x1> <y1> 001 </y1> <z1> 001 </z1> <x2> 205 </x2> <y2> 200 </y2> <z2> 200 </z2> </fluid2>
+    <fluid2> <x1> 003 </x1> <y1> 001 </y1> <z1> 001 </z1> <x2> 255 </x2> <y2> 250 </y2> <z2> 250 </z2> </fluid2>
 </init>
 
 
 <fluids>
     <Gc> 0.9 </Gc>
-    <omega_f1> 0.668992958030444 </omega_f1>
-    <omega_f2> 0.834757065754491 </omega_f2>
+    <omega_f1> 1 </omega_f1>
+    <omega_f2> 1 </omega_f2>
     <force_f1> 0 </force_f1>
     <force_f2> 0 </force_f2>
     <!-- Wetting forces Huang et al., 2007. -->
-    <G_ads_f1_s1> -0.387762874544482 </G_ads_f1_s1>
+    <G_ads_f1_s1> -0.4 </G_ads_f1_s1>
     <G_ads_f1_s2>  0.0 </G_ads_f1_s2>
     <G_ads_f1_s3>  0.0 </G_ads_f1_s3>
     <G_ads_f1_s4>  0.0 </G_ads_f1_s4>
 
     <!-- Intial density of fluid 1 -->
-    <rho_f1> 2 </rho_f1>
+    <rho_f1> 1.613 </rho_f1>
     <!-- Initial density of fluid 2 -->
-    <rho_f2> 2 </rho_f2>
+    <rho_f2> 0.998 </rho_f2>
     <!-- Include a pressure gradient bc (for flow)-->
     <pressure_bc> True </pressure_bc>
     <!-- Density change of fluid 2 at outlet per capillary increment -->
@@ -49,11 +49,11 @@
     <!-- Initial Density of fluid 2 at the outlet -->
     <rho_f2_i> 2 </rho_f2_i>
     <!-- Final density of fluid 2 at the outlet (after n-steps) -->
-    <rho_f2_f> 0.1 </rho_f2_f>
+    <rho_f2_f> 1 </rho_f2_f>
     <!-- Dissolved density of one phase in the other (both f1 and f2) -->
-    <rho_d> 0.01 </rho_d>
+    <rho_d> 0.05 </rho_d>
     <!-- Decrement in outlet density -->
-    <drho_f2> 0.1 </drho_f2>
+    <drho_f2> 0.05 </drho_f2>
     <!-- Number of capillary step increments -->
     <num_pc> NA </num_pc>
 
@@ -66,19 +66,19 @@
     <!-- Save the simulation state after every capillary increment (big files) -->
     <save_sim> True </save_sim>
     <!-- Convergence criteron (density change) -->
-    <convergence> 0.1 </convergence>
+    <convergence> 0.001 </convergence>
     <!-- Max iterations per Pc step -->
-    <it_max> 50000 </it_max>
+    <it_max> 75000 </it_max>
     <!-- Check for convergence every -->
     <it_conv> 100 </it_conv>
     <!-- Print info to the terminal -->
     <it_info> 1000 </it_info>
     <!-- Print density gifs -->
-    <it_gif> 999999999999 </it_gif>
+    <it_gif> 100000 </it_gif>
     <!-- Write f1 and f2 density vtks (True). Only f1 (False) -->
     <rho_vtk> True </rho_vtk>
     <!-- print vtks every (big files) -->
-    <it_vtk> 999999999999 </it_vtk>
+    <it_vtk> 50001 </it_vtk>
     <!-- print geometry at the beginning -->
     <print_geom> True </print_geom>
     <!-- print stl (for 3D printing and viewing)  -->

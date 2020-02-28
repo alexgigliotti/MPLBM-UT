@@ -1,4 +1,4 @@
-function [ M ] = eliminate_isolatedRegions( M, connect )
+function [ M ] = eliminate_isolatedRegions( M, connect, output_dir )
 % M is a binary image. Where 0 represents the pore space and 1 the solid
 
 tmp=bwconncomp( ~M ,connect ); %check for unconnected regions in the pore-space
@@ -7,6 +7,9 @@ phi_i=1-sum(M(:))/numel(M);  %Initial porosity
 fprintf('The intial porosity is %.3f %% with %d connected regions \n', ...
             phi_i*100, tmp.NumObjects)
 
+% Save porosity
+porosity_save_dir = [output_dir '/' 'porosity.csv']
+csvwrite(porosity_save_dir, phi_i)
 
 size_regions = cellfun(@numel,tmp.PixelIdxList);
 [ind_size, position] = sort(size_regions, 'descend');

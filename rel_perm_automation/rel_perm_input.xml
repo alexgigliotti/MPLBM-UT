@@ -2,27 +2,29 @@
 
 <geometry>
     <!-- The name of the .dat file that contains the entire geometry-->
-    <file_geom> input/300_RG_theta60por1000_geometry_305_300_300 </file_geom>
+    <file_geom> input/250_finney_pack_oil_water_geometry_255_250_250 </file_geom>
     <!-- Size (in voxels) of the simulation domain. -->
-    <size> <x> 305 </x> <y> 300 </y> <z> 300 </z> </size>
+    <size> <x> 255 </x> <y> 250 </y> <z> 250 </z> </size>
+    <!-- Turn periodicty TRUE or FALSE in x,y,z. -->
+    <per> <x> false </x> <y> false </y> <z> false </z> </per>
 </geometry>
 
 <folder>
     <!-- Output folder -->
-    <out_f> /workspace/gigliotti/mpmp_automation/tmp/rel_perm_calculation/output/ </out_f>
+    <out_f> /storage/gigliotti/geometry_comparison_test/tmp/rel_perm_calculation/output/ </out_f>
     <!-- Input folder -->
-    <in_f> /workspace/gigliotti/mpmp_automation/tmp/rel_perm_calculation/fluid_geometry_input/ </in_f>
+    <in_f> /storage/gigliotti/geometry_comparison_test/tmp/rel_perm_calculation/fluid_geometry_input/ </in_f>
 </folder>
 
 <simulations>
     <!-- Total number of geometries / individual simulations -->
-    <num> 76 </num>
+    <num> 22 </num>
     <!-- Pressure-->
     <press> 0.0005 </press>
     <!-- Max iterations-->
-    <iter> 4000 </iter>
+    <iter> 1000000 </iter>
     <!-- Convergence-->
-    <conv> 0.01 </conv>
+    <conv> 0.00001 </conv>
     <!-- Save vtks for medium and velocity-->
     <vtk_out> false </vtk_out>
 </simulations>
