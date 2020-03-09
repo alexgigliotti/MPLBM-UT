@@ -606,11 +606,11 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
 			    // velocities.
 			    for (plint r = 1; r <= 10000; ++r) {
 			    	
-			    	lattice_fluid1.collideAndStream()
-			    	lattice_fluid2.collideAndStream()
+			    	lattice_fluid1.collideAndStream();
+			    	lattice_fluid2.collideAndStream();
 
 				// Output velocity and density profiles at the listed iteration counts.
-				if (r == 500 || r == 1000 || r = 5000 || r == 10000) {
+				if (r == 500 || r == 1000 || r == 5000 || r == 10000) {
 
 				    string relax_str;
 				    string vel_name;
