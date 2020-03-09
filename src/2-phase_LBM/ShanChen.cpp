@@ -599,6 +599,35 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
                           if ( checkconv == 1 ) {
                             writeGif_f1(  lattice_fluid1, lattice_fluid2, runs_str, iT);
                             writeGif_f1_y(lattice_fluid1, lattice_fluid2, runs_str, iT);
+                            
+			    // Velocity Noise Relaxation Test:
+			    // Let fluid equilibriate for an additional 10000 iterations,
+			    // and hopefully we can get a noise profile and get accurate
+			    // velocities.
+			    for (plint r = 1; r <= 10000; ++r) {
+			    	
+			    	lattice_fluid1.collideAndStream()
+			    	lattice_fluid2.collideAndStream()
+
+				// Output velocity and density profiles at the listed iteration counts.
+				if (r == 500 || r == 1000 || r = 5000 || r == 10000) {
+
+				    string relax_str;
+				    string vel_name;
+				    string rho_name;
+				    relax_str = runs_str + "_relax_" + std::to_string(r);
+				    
+				    vel_name = outDir + "/vel_f1_" + relax_str + ".dat";
+				    plb_ofstream ofile3( vel_name.c_str() );
+				    ofile3 << setprecision(1) <<*computeVelocity(lattice_fluid1) << endl;
+
+				    rho_name = outDir + "/rho_f1_" + relax_str + ".dat";
+				    plb_ofstream ofile2(rho_name.c_str());
+				    ofile2 << setprecision(2) <<*computeDensity(lattice_fluid1) << endl;
+				
+				}
+			    }
+
 
                           // saves converged state vtks
                           if ( it_vtk < 100000 ) {
