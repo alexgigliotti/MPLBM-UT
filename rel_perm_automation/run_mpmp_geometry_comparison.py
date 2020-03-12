@@ -36,9 +36,9 @@ class AutomatedMPMP():
         self.contact_angle = contact_angle * np.pi/180  # Convert to radians
 
         # Set simulation size
-        nx = 250 + 5  # Add 5 for padding on both ends of simulation (?)
-        ny = 250
-        nz = 250
+        nx = 100 + 5  # Add 5 for padding on both ends of simulation (?)
+        ny = 100
+        nz = 100
         self.simulation_size = [nx, ny, nz]
 
         return

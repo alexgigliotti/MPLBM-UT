@@ -1,0 +1,86 @@
+/storage/gigliotti/geometry_comparison_test/tmp/2_phase_shanchen_output/fluid_geometry_files/porousMedium.vti
+Elapsed time is 338.789894 seconds.
+/storage/gigliotti/geometry_comparison_test/tmp/2_phase_shanchen_output/fluid_geometry_files/porousMedium.vti
+Elapsed time is 305.155316 seconds.
+/storage/gigliotti/geometry_comparison_test/tmp/2_phase_shanchen_output/fluid_geometry_files/porousMedium.vti
+Elapsed time is 93.135402 seconds.
+/storage/gigliotti/geometry_comparison_test/tmp/2_phase_shanchen_output/fluid_geometry_files/porousMedium.vti
+{Operation terminated by user during xml2struct>parseChildNodes (line 110)
+
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct (line 57)
+    s = parseChildNodes(xDoc);
+
+In read_save_fluids (line 28)
+f.f1_vti_struct=xml2struct([directory 'porousMedium.vti']); %read output file
+} 
+{Operation terminated by user during xml2struct>parseChildNodes (line 110)
+
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct>getNodeData (line 147)
+    [childs,text,textflag] = parseChildNodes(theNode);
+
+In xml2struct>parseChildNodes (line 72)
+            [text,name,attr,childs,textflag] = getNodeData(theChild);
+
+In xml2struct (line 57)
+    s = parseChildNodes(xDoc);
+
+In read_save_fluids (line 28)
+f.f1_vti_struct=xml2struct([directory 'porousMedium.vti']); %read output file
+} 
+exit

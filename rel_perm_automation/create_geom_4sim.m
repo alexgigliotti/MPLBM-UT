@@ -3,13 +3,13 @@
 %% opening the file
 addpath ('../pre-processing') %pre-precesing libraries
 d_size = 500; %voxels each side
-raw_geometry_file_to_open = '/storage/gigliotti/geometry_comparison_test/tmp/raw_geometry/250_finney_pack_oil_water.raw';
+raw_geometry_file_to_open = '/storage/gigliotti/geometry_comparison_test/tmp/raw_geometry/100_finney_pack_test.raw';
 f1 = fopen(raw_geometry_file_to_open,'r'); %read raw file
 fp = fread(f1, d_size*d_size*d_size,'uint8=>uint8');
 fp = reshape(fp, d_size,d_size,d_size);
 
 %% selecting a smaller subset
-print_size = 250; %size of the Finneypack subset (in voxels per side)
+print_size = 100; %size of the Finneypack subset (in voxels per side)
 fp_printing = fp(1:print_size, 1:print_size, 1:print_size);
 figure();imagesc(fp_printing(:,:,uint8(print_size/2)));
 title('Cross-section of the simulation subset')
@@ -20,7 +20,7 @@ output_directory_for_porosity = '/storage/gigliotti/geometry_comparison_test/tmp
 fp = eliminate_isolatedRegions(fp, connect, output_directory_for_porosity); %for better convergence
 
 %% making a computationally efficent domain for sim
-geometry_file_output_name = '250_finney_pack_oil_water_geometry';
+geometry_file_output_name = '100_finney_pack_test_geometry';
 name = [geometry_file_output_name];
 add_mesh   = true; % add a neutral-wet mesh at the end of the domain
 num_slices = 2;    % add n empty slices at the beggining and end of domain 

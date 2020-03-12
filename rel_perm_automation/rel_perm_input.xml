@@ -2,9 +2,9 @@
 
 <geometry>
     <!-- The name of the .dat file that contains the entire geometry-->
-    <file_geom> input/250_finney_pack_oil_water_geometry_255_250_250 </file_geom>
+    <file_geom> input/100_finney_pack_test_geometry_105_100_100 </file_geom>
     <!-- Size (in voxels) of the simulation domain. -->
-    <size> <x> 255 </x> <y> 250 </y> <z> 250 </z> </size>
+    <size> <x> 105 </x> <y> 100 </y> <z> 100 </z> </size>
     <!-- Turn periodicty TRUE or FALSE in x,y,z. -->
     <per> <x> false </x> <y> false </y> <z> false </z> </per>
 </geometry>
@@ -18,7 +18,7 @@
 
 <simulations>
     <!-- Total number of geometries / individual simulations -->
-    <num> 22 </num>
+    <num> 32 </num>
     <!-- Pressure-->
     <press> 0.0005 </press>
     <!-- Max iterations-->
