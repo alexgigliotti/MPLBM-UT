@@ -4,9 +4,7 @@ Multiphase LBM Toolbox: Permeable media analysis using the Palabos library and i
 
 This workflow calculates capillary pressure curves, relative permeability, tortuosity, contact angles, and the percolation pathway of grain packs/image slices. The direct fluid flow simulation is performed using Palabos v2.
 
-This repository was created by Javier E. Santos and Abhishek Bihani
-
-in collaboration with Christopher Landry, Hugh Daigle, Masa Prodanovic and Wenhui Song
+This repository was created by Javier E. Santos and Abhishek Bihani in collaboration with Christopher Landry, Hugh Daigle, Masa Prodanovic, Wenhui Song, and Michael Pyrcz
 
 .. figure:: /illustrations/percolation.png
     :align: right
@@ -14,6 +12,8 @@ in collaboration with Christopher Landry, Hugh Daigle, Masa Prodanovic and Wenhu
     :figclass: align-right
 
     Percolating path of a non-wetting fluid (rock and wetting fluid not shown).
+
+----------------------------------------------------------------------------
 
 .. contents::
 
@@ -31,6 +31,11 @@ Requirements
 - Matlab or Octave (Python alternative coming soon)
 
 - Unix system (the Windows bash or the terminal in Mac)
+
+- GCC 7.2
+- OpenMPI 2.1.1 or MPICH2
+- Python 2.7.x (to complie Palabos)
+
 
 ################################################################################
 Installation
@@ -63,7 +68,7 @@ B) Two-Phase LBM Simulation (cpp w/MPI using PALABOS):
 
 C) Post-processing (Matlab/Octave):
 
-- Read the generated vtk files using read_save_fluids.m
+- Read the generated  files using post-porcessing/domains_4_kr.m
 (It will calculate the wetting saturation for all vtk files, will convert the fluid configurations (1 and 2) to .dat files for 1-phase LBM simulation and will find the vtk file where breakthrough occurs and the percolation path/tortuosity. You can choose if you want to generate fluid geometries or calculate percolation path at breakthrough)
 
 D) Single-Phase LBM Simulation (cpp w/MPI using PALABOS):
@@ -127,6 +132,22 @@ Why am I seeing the same line printed multiple times? / Why is the code so slow?
   sudo make install
 
 Note that this process takes a few hours.
+
+-----------------------------------------------------------------------------------------------------------
+
+I am getting a Java Heap Memory error in Matlab?
+You need to change the JavaHeapMemory setting in Matlab:
+
+If you're working on a remote system/cluster or supercomputer, the easiest way to do this is to find and change your matlab.prf file diretly.
+
+You will find the matlab.prf in your user storage directory. It will be something like:
+```[user home]/.matlab/[Matlab version]/matlab.prf```
+
+Once the file is open add the following line to the file:
+```JavaMemHeapMax = [Java Memory Code]```
+You will need to find the sepcific Java memory code that corresponds to the amount of RAM you need.
+
+Or you can try this fix (If you are on a remote system, cluster, or supercomputer this may not work): https://www.mathworks.com/matlabcentral/answers/74296-change-java-heap-memory-settings-without-starting-matlab
 
 ################################################################################
 Citing the workflow
