@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+
+<geometry>
+    <!-- The name of the .dat file that contains the entire geometry-->
+    <file_geom> input/100_finney_pack_test_geometry_105_100_100 </file_geom>
+    <!-- Size (in voxels) of the simulation domain. -->
+    <size> <x> 105 </x> <y> 100 </y> <z> 100 </z> </size>
+    <!-- Turn periodicty TRUE or FALSE in x,y,z. -->
+    <per> <x> false </x> <y> false </y> <z> false </z> </per>
+</geometry>
+
+<folder>
+    <!-- Output folder -->
+    <out_f> /storage/gigliotti/geometry_comparison_test/tmp/rel_perm_calculation/output/ </out_f>
+    <!-- Input folder -->
+    <in_f> /storage/gigliotti/geometry_comparison_test/tmp/rel_perm_calculation/fluid_geometry_input/ </in_f>
+</folder>
+
+<simulations>
+    <!-- Total number of geometries / individual simulations -->
+    <num> 32 </num>
+    <!-- Pressure-->
+    <press> 0.0005 </press>
+    <!-- Max iterations-->
+    <iter> 1000000 </iter>
+    <!-- Convergence-->
+    <conv> 0.00001 </conv>
+    <!-- Save vtks for medium and velocity-->
+    <vtk_out> false </vtk_out>
+</simulations>
+

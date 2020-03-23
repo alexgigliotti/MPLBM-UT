@@ -1,0 +1,5 @@
+fluid: 
+    water:
+        compressibility: 0.000001 #psi^-1
+        viscosity: 1. #cp
+        formation volume factor: 1. 

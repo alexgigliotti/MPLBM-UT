@@ -8,14 +8,14 @@ clear
 tic
 %Options:
 
-medial_axis=1; %To find fluid medial axes and first percolation path
+medial_axis=0; %To find fluid medial axes and first percolation path
 print=1;      %Create geometries for fluids 1 and 2 for relative permeability calculations
 
 
 %post-processing new...
 
 %Update path to folder where output .dat files from 2-phase simulation are stored
-directory='C:\Users\Abhishek\Desktop\shanchen_updated_try\MultiphasePorousMediaPalabos\examples\relative_permeability_spherepack\tmp\';
+directory= '/storage/gigliotti/geometry_comparison_test/tmp/2_phase_shanchen_output/fluid_geometry_files/';
 
 list=dir([directory 'rho_f1*.dat']);
 listcell=struct2cell(list);
@@ -24,6 +24,7 @@ listcell=listcell(1,:);
 first=0;
 
 %Reading 1 vtk file generated from Palabos to get geometry limits
+disp([directory 'porousMedium.vti'])
 f.f1_vti_struct=xml2struct([directory 'porousMedium.vti']); %read output file
 f.f1_vti_str=base64decode(f.f1_vti_struct.VTKFile.ImageData.Piece.PointData.DataArray.Text);
 f.f1_vti_no=typecast([0 0 f.f1_vti_str],'double');
