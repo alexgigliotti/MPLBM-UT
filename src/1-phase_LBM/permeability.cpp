@@ -357,8 +357,8 @@ void porousMediaSetup(MultiBlockLattice3D<T,DESCRIPTOR>& lattice,
     ofile << "Outputs" << "\n\n";
     ofile << "Krw from run: 2" << "\n" << "Krnw from run: " << (run_diff+1) << std::endl;
     
-    // Create and open files for rel perm and perm
-    std::string filename_perm = "perm_data.csv";
+    // Create and open files to save rel perm and perm data
+    std::string filename_perm = "absolute_permeability.csv";
     std::string filename_relperm = "relperm_data.csv";
     std::ofstream permFile(filename_perm);
     std::ofstream relpermFile(filename_relperm);
@@ -380,7 +380,7 @@ void porousMediaSetup(MultiBlockLattice3D<T,DESCRIPTOR>& lattice,
       ofile << "Relative Permeability   = " << rel_perm[runs]         << std::endl;
       ofile << "Mean Velocity   = " << meanU[runs]         << std::endl;
 
-      // workaround for saving data while ofile not working...
+      // Save rel perm data to a csv
       if(relpermFile){ // checks if opened successfully
         relpermFile << rel_perm[runs] << ","; // write data
       }
