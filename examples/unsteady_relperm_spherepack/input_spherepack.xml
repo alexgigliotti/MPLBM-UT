@@ -5,9 +5,9 @@
 
 <geometry>
     <!-- The name of the .dat file that with the geometry. -->
-    <file_geom> input/spheres4Palabos_105_100_100.dat </file_geom>
+    <file_geom> input/spheres4Palabos_109_100_100.dat </file_geom>
     <!-- Size (in voxels) of the simulation domain. -->
-    <size> <x> 105 </x> <y> 100 </y> <z> 100 </z> </size>
+    <size> <x> 109 </x> <y> 100 </y> <z> 100 </z> </size>
     <!-- Periodicity in the boundary conditions -->
     <per>
           <fluid1> <x> false </x> <y> false </y> <z> false </z> </fluid1>
@@ -24,7 +24,7 @@
   <!-- Initial position of fluid 2  -->
     <fluid2>
           <x1> 003 </x1> <y1> 001 </y1> <z1> 001 </z1>
-          <x2> 105 </x2> <y2> 100 </y2> <z2> 100 </z2>
+          <x2> 109 </x2> <y2> 100 </y2> <z2> 100 </z2>
     </fluid2>
 </init>
 
@@ -72,13 +72,13 @@
     <!-- Max iterations per Pc step -->
     <it_max> 1000000 </it_max>
     <!-- Check for convergence every -->
-    <it_conv> 100 </it_conv>
+    <it_conv> 500 </it_conv>
     <!-- Print density gifs -->
-    <it_gif> 200 </it_gif>
+    <it_gif> 50000 </it_gif>
     <!-- Write f1 and f2 density vtks (True). Only f1 (False) -->
     <rho_vtk> True </rho_vtk>
     <!-- print vtks every (big files) -->
-    <it_vtk> 1000 </it_vtk>
+    <it_vtk> 50000 </it_vtk>
     <!-- print geometry at the beginning -->
     <print_geom> True </print_geom>
     <!-- print stl (for 3D printing and viewing)  -->

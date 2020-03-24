@@ -1,9 +1,9 @@
 addpath ('../../post-processing') %post-precesing libraries
 
 %% Input for the function
-kr.domain_size  = [200,200,200];
+kr.domain_size  = [109,100,100];
 kr.mesh_added   = false; % was a neutral-wet mesh added at the end of the domain?
-kr.num_slices   = 0;    % how many n empty slices at the begining and end of domain
+kr.num_slices   = 4;    % how many n empty slices at the begining and end of domain
 kr.input_dir    = 'input';
 kr.input_geom   = 'spheres4Palabos';
 kr.output_file  = 'info_4kr.txt';
