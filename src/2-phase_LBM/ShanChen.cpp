@@ -8,6 +8,7 @@
 #include <vector>
 #include <cmath>
 #include <time.h>
+#include <stdexcept>
 
 using namespace plb;
 using namespace std;
@@ -216,10 +217,10 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
 
             if (load_state == true) {
 
-              loadBinaryBlock(lattice_fluid1, "lattice_fluid1.dat");
-              loadBinaryBlock(lattice_fluid2, "lattice_fluid2.dat");
+              loadBinaryBlock(lattice_fluid1, "tmp/lattice_fluid1.dat");
+              loadBinaryBlock(lattice_fluid2, "tmp/lattice_fluid2.dat");
 
-			        plb_ifstream ifile("runnum.dat");
+			        plb_ifstream ifile("tmp/runnum.dat");
 			        if (ifile.is_open()) {
 				      ifile >> runs;
 			         }
@@ -340,9 +341,10 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
             plint it_info ;
             plint it_vtk ;
             plint it_gif ;
+            // plint save_it;
 
 
-            bool save_sim, save_it, rho_vtk, print_geom, print_stl ;
+            bool save_sim, rho_vtk, print_geom, print_stl ;
 
             T convergence ;
 
@@ -414,8 +416,8 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
 
               document["output"]["out_folder"].read(fNameOut);
               document["output"]["save_sim"].read(save_sim);
-              //document["output"]["save_it"].read(save_it);
-              save_it = 10000000;
+              // document["output"]["save_it"].read(save_it);
+              // save_it = 10000000;
               document["output"]["convergence"].read(convergence);
 
               document["output"]["it_max"].read(it_max);
@@ -457,6 +459,22 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
             std::string outDir   =   fNameOut;
             std::string Lattice1 =   fNameOut + "lattice1.dat";
             std::string Lattice2 =   fNameOut + "lattice2.dat";
+            
+            // Read runnum.dat to get current run number
+            plint start_num;
+            string runnum_file_dir;
+            runnum_file_dir = outDir + "/runnum.dat";
+            plb_ifstream i_runnum_file(runnum_file_dir.c_str());
+            
+            if (i_runnum_file.is_open()){
+                i_runnum_file >> start_num;
+            }
+            else{
+                throw std::runtime_error("tmp/runnum.dat not found. Please make sure it exists and contains the current run number!");
+            }
+            
+            pcout << "Current run number is: " << start_num << endl;
+            
 
             for (plint readnum = 1; readnum <= runnum; ++readnum) {
               rho_fluid2[readnum] = rho_f2_outlet_initial - (readnum-1)*drho_f2;
@@ -517,6 +535,9 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
 
                   use_plb_bc = false; //testing this built-in BC
                   // Loop simulations with varying saturation
+
+
+
                   for (plint runs = 1; runs <= runnum; ++runs) {
 
                     if (use_plb_bc==true && pressure_bc==true)
@@ -583,12 +604,16 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
                         lattice_fluid2.collideAndStream();
 
                         // saves a binary file (heavy) with the sim state
-                        if (save_sim == true && iT % save_it==0 && iT>0)
-                          {
-                          pcout << "Saving restart files" << endl;
-                          saveBinaryBlock(lattice_fluid1, Lattice1);
-                          saveBinaryBlock(lattice_fluid2, Lattice2);
-                          }
+                        // if (save_sim == true && iT % save_it==0 && iT>0)
+                        //  {
+                        //    pcout << "Saving restart files...";
+                        //    pcout << iT << endl;
+                        //    pcout << save_it << endl;
+                        //    pcout << iT % save_it << endl;
+                        //   saveBinaryBlock(lattice_fluid1, Lattice1);
+                        //    saveBinaryBlock(lattice_fluid2, Lattice2);
+                        //    pcout << "Done!" << endl;
+                        //  }
 
                         // save gifs
                         if (iT % it_gif == 0)
@@ -673,8 +698,8 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
                             // saves a .dat file with the run number (for restarting sim)
                             string run_name;
                             run_name = outDir + "/runnum.dat";
-                            plb_ofstream ofile1( run_name.c_str()  );
-              							ofile1 << runs << endl;
+                            plb_ofstream ofile1( run_name.c_str()  );              		    
+                            ofile1 << runs << endl;
 
                             // saves a .dat file (lightweight) with the density
                             string rho_name;
@@ -691,8 +716,10 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
                             // saves a binary file (heavy) with the sim state
                             if (save_sim == true)
                             {
+                              pcout << "Saving restart files...";
                               saveBinaryBlock(lattice_fluid1, Lattice1);
                               saveBinaryBlock(lattice_fluid2, Lattice2);
+                              pcout << "Done!" << endl;
                             }
 
 
