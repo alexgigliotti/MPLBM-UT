@@ -1,7 +1,7 @@
 addpath ('../../post-processing') %post-processing libraries
 
 %% Input for the function
-kr.domain_size  = [200,200,200];
+kr.domain_size  = [109,100,100];
 kr.mesh_added   = true; % was a neutral-wet mesh added at the end of the domain?
 kr.num_slices   = 4;    % how many n empty slices at the begining and end of domain
 kr.input_dir    = 'input';
