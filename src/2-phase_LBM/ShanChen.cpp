@@ -214,25 +214,24 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
               delete boundaryCondition;
             }
 
-
             if (load_state == true) {
-
-              loadBinaryBlock(lattice_fluid1, "tmp/lattice_fluid1.dat");
-              loadBinaryBlock(lattice_fluid2, "tmp/lattice_fluid2.dat");
-
-			        plb_ifstream ifile("tmp/runnum.dat");
-			        if (ifile.is_open()) {
-				      ifile >> runs;
-			         }
+              pcout << "Loading saved lattice data...";
+              loadBinaryBlock(lattice_fluid1, "tmp/lattice1.dat");
+              loadBinaryBlock(lattice_fluid2, "tmp/lattice2.dat");
+	      plb_ifstream ifile("tmp/runnum.dat");
+	      
+	      if (ifile.is_open()) {
+		ifile >> runs;
+		}
+	      pcout << "Done!" << endl;
             }
 
             if (load_state == false) {
               // NoDynamics (computational efficency, labeled with 2)
               defineDynamics(lattice_fluid1, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
               defineDynamics(lattice_fluid2, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
-
             }
-
+            
               // First contact angle (labeled with 1)
               defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s1), 1);
               defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s1), 1);
@@ -255,6 +254,7 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
               defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s4), 6);
 
               //Array<T, 3> zeroVelocity(0., 0., 0.);
+              
 
               if (load_state == false) {
               pcout << "Initializing Fluids" << endl;
@@ -461,13 +461,18 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
             std::string Lattice2 =   fNameOut + "lattice2.dat";
             
             // Read runnum.dat to get current run number
-            plint start_num;
+            int start_num;
             string runnum_file_dir;
-            runnum_file_dir = outDir + "/runnum.dat";
-            plb_ifstream i_runnum_file(runnum_file_dir.c_str());
             
+            runnum_file_dir = outDir + "/runnum.dat";
+            
+            plb_ifstream i_runnum_file(runnum_file_dir.c_str());
             if (i_runnum_file.is_open()){
                 i_runnum_file >> start_num;
+                
+                if (load_state == true){
+                    start_num++;
+                }
             }
             else{
                 throw std::runtime_error("tmp/runnum.dat not found. Please make sure it exists and contains the current run number!");
@@ -535,10 +540,7 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
 
                   use_plb_bc = false; //testing this built-in BC
                   // Loop simulations with varying saturation
-
-
-
-                  for (plint runs = 1; runs <= runnum; ++runs) {
+                  for (plint runs = start_num; runs <= runnum; ++runs) {
 
                     if (use_plb_bc==true && pressure_bc==true)
                       {
@@ -563,7 +565,7 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
                     pcout << "Run number = " << runs << endl;
 
                     // re-use the final state of the previous run
-                    if (runs > 1)
+                    if (runs > start_num)
                     {
                       pcout << "Using previous simulation state  " << endl;
                     }
