@@ -461,7 +461,7 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
             std::string Lattice2 =   fNameOut + "lattice2.dat";
             
             // Read runnum.dat to get current run number
-            int start_num;
+            plint start_num = 1;
             string runnum_file_dir;
             
             runnum_file_dir = outDir + "/runnum.dat";
@@ -471,6 +471,7 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
                 i_runnum_file >> start_num;
                 
                 if (load_state == true){
+                    pcout << "Continuing saved simulation state..." << endl;
                     start_num++;
                 }
             }
