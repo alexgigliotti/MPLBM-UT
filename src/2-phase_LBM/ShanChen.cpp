@@ -789,3 +789,4 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
 
                     }
                   }
+
