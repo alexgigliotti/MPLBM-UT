@@ -4,7 +4,7 @@
 #matlab -nodesktop -nosplash -r 'create_geom_4_2phase; exit;'
 
 # Run Shan Chen LBM simulation
-mpirun -np 8 ../../src/2-phase_LBM/ShanChen input_spherepack.xml
+mpirun -np 4 ../../src/2-phase_LBM/ShanChen input_spherepack.xml
 
 # Create rel perm geometry
 #matlab -nodesktop -nosplash -r 'create_geoms_4_kr; exit;'

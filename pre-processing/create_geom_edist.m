@@ -36,7 +36,7 @@ geom4palabos(:,:,[1,end])=1;
 geom4palabos(edist==0)=0;
 
 geom4palabos(geom4palabos>0 & geom4palabos<2)=1;
-geom4palabos(geom4palabos>1)=2;
+geom4palabos(geom4palabos>1)=1;  % THIS was originally set to 2 but changed to 1 for save sim state bug
 
 
 % add a mesh if requested

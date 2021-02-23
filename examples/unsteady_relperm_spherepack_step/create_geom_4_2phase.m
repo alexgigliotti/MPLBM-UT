@@ -31,7 +31,10 @@ palabos_3Dmat   = create_geom_edist(fp_printing,geom);
                                     %provides a very  efficient 
                                     %geometry for Palabos
 
-
+figure();imagesc(palabos_3Dmat(:,:,uint8(print_size/2)));
+colormap(jet(5)); colorbar;
+title('Cross-section of the simulation subset')
+                                    
 % old version
 %palabos_3Dmat = mat2dat_4lbm(fp_printing,name,1); %although this function is slow, it 
                                     
