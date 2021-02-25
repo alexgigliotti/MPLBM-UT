@@ -9,6 +9,7 @@
 #include <cmath>
 #include <time.h>
 #include <stdexcept>
+#include <mpi.h>
 
 using namespace plb;
 using namespace std;
@@ -18,10 +19,11 @@ typedef double T; // Use double-precision arithmetics
 // Use a grid which additionally to the f's stores two variables for the external force term.
 #define DESCRIPTOR descriptors::ForcedShanChenD3Q19Descriptor
 
- //creates the gifs
+//creates the gifs
 void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
-  MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid2, string runs, plint iT)
-  {
+                 MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid2, string runs,
+                 plint iT)
+{
     const plint imSize = 600;
     const plint nx = lattice_fluid2.getNx();
     const plint ny = lattice_fluid2.getNy();
@@ -37,288 +39,294 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
     ImageWriter<T> imageWriter("leeloo.map");
     imageWriter.writeScaledGif(createFileName(im_name, iT, 8),
     *computeDensity(lattice_fluid1, slice), imSize, imSize);
-  }
+}
 
 
-  void writeVTK_vel(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid1, plint runs)
-  {
+void writeVTK_vel(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid1, plint runs)
+{
     VtkImageOutput3D<T> vtkOut(createFileName("vtk_vel_rho1_", 1 * runs, 6), 1.);
     vtkOut.writeData<float>(*computeVelocityNorm(lattice_fluid1), "velocityNorm", 1.);
     vtkOut.writeData<3,float>(*computeVelocity(lattice_fluid1), "velocity", 1.);
-  }
+}
 
 
-  void writeGif_f1_y(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
-    MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid2, string runs, plint iT)
-    {
-      const plint imSize = 600;
-      const plint nx = lattice_fluid2.getNx();
-      const plint ny = lattice_fluid2.getNy();
-      const plint nz = lattice_fluid2.getNz();
-      Box3D slice(0, nx, ny / 2, ny / 2, 0, nz);
+void writeGif_f1_y(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
+                   MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid2, 
+                   string runs, plint iT)
+{
+    const plint imSize = 600;
+    const plint nx = lattice_fluid2.getNx();
+    const plint ny = lattice_fluid2.getNy();
+    const plint nz = lattice_fluid2.getNz();
+    Box3D slice(0, nx, ny / 2, ny / 2, 0, nz);
 
-      string im_name;
+    string im_name;
 
-      im_name = "rho_f1_y_";
-      im_name.append(runs);
-      im_name.append("_");
+    im_name = "rho_f1_y_";
+    im_name.append(runs);
+    im_name.append("_");
 
-
-      ImageWriter<T> imageWriter("leeloo.map");
-      imageWriter.writeScaledGif(createFileName(im_name, iT, 8),
-      *computeDensity(lattice_fluid1, slice), imSize, imSize);
-    }
-
-    void writeVTK_rho(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid,
-      string im_name, string runs, plint iter, plint nx, plint ny, plint nz)
-    {
+    ImageWriter<T> imageWriter("leeloo.map");
+    imageWriter.writeScaledGif(createFileName(im_name, iT, 8),
+    *computeDensity(lattice_fluid1, slice), imSize, imSize);
+}
 
 
-      im_name.append(runs);
-      im_name.append("_");
+void writeVTK_rho(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid,
+                  string im_name, string runs, plint iter, plint nx,
+                  plint ny, plint nz)
+{
+    im_name.append(runs);
+    im_name.append("_");
 
-      const plint zcomponent = 0;
-      VtkImageOutput3D<double> vtkOut(createFileName(im_name, iter, 8), 1.);
-      vtkOut.writeData<double>((*computeDensity(lattice_fluid)), "Density", 1.);
-    }
-
-	 void writeVTK_vel(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid,
-      string im_name, string runs, plint iter)
-    {
-      plint xComponent = 0;
-      const plint nx = lattice_fluid.getNx();
-      const plint ny = lattice_fluid.getNy();
-      const plint nz = lattice_fluid.getNz();
-      Box3D domain(0, nx-1, 0, ny-1, 0, nz-1);
-
-      im_name.append(runs);
-      im_name.append("_");
-
-      const plint zcomponent = 0;
-      VtkImageOutput3D<double> vtkOut(createFileName(im_name, iter, 8), 1.);
-      vtkOut.writeData<double>((*computeVelocityComponent(lattice_fluid, domain, xComponent)), "Velocity", 1.);
-    }
+    const plint zcomponent = 0;
+    VtkImageOutput3D<double> vtkOut(createFileName(im_name, iter, 8), 1.);
+    vtkOut.writeData<double>((*computeDensity(lattice_fluid)), "Density", 1.);
+}
 
 
+void writeVTK_vel(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid,
+                  string im_name, string runs, plint iter)
+{
+    plint xComponent = 0;
+    const plint nx = lattice_fluid.getNx();
+    const plint ny = lattice_fluid.getNy();
+    const plint nz = lattice_fluid.getNz();
+    Box3D domain(0, nx-1, 0, ny-1, 0, nz-1);
 
-    T computeVelocity_f1(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid1, T nu_f1)
-    {
-      plint xComponent = 0;
-      const plint nx = lattice_fluid1.getNx();
-      const plint ny = lattice_fluid1.getNy();
-      const plint nz = lattice_fluid1.getNz();
+    im_name.append(runs);
+    im_name.append("_");
 
-      Box3D domain(3, 4, 0, ny-1, 0, nz-1);
-      T meanU1 = computeAverage(*computeVelocityComponent(lattice_fluid1, domain, xComponent));
-      pcout << "Average velocity for fluid1 in x direction    = "<< meanU1<<std::endl;
-      return meanU1;
-    }
+    const plint zcomponent = 0;
+    VtkImageOutput3D<double> vtkOut(createFileName(im_name, iter, 8), 1.);
+    vtkOut.writeData<double>((*computeVelocityComponent(lattice_fluid, domain, xComponent)), "Velocity", 1.);
+}
 
-    T computeVelocity_f2(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid2, T nu_f2)
-    {
-      plint xComponent = 0;
-      const plint nx = lattice_fluid2.getNx();
-      const plint ny = lattice_fluid2.getNy();
-      const plint nz = lattice_fluid2.getNz();
 
-      Box3D domain(3, nx-4, 0, ny-1, 0, nz-1);
-      T meanU2 = computeAverage(*computeVelocityComponent(lattice_fluid2, domain, xComponent));
-      pcout << "Average velocity for fluid2 in x direction    = " << meanU2            << std::endl;
-      return meanU2;
-    }
 
-      void readGeometry(std::string fNameIn, std::string fNameOut,
-        MultiScalarField3D<int>& geometry)
-        {
-          const plint nx = geometry.getNx();
-          const plint ny = geometry.getNy();
-          const plint nz = geometry.getNz();
+T computeVelocity_f1(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid1, T nu_f1)
+{
+    plint xComponent = 0;
+    const plint nx = lattice_fluid1.getNx();
+    const plint ny = lattice_fluid1.getNy();
+    const plint nz = lattice_fluid1.getNz();
 
-          Box3D sliceBox(0,0, 0,ny-1, 0,nz-1);
-          std::unique_ptr<MultiScalarField3D<int> > slice = generateMultiScalarField<int>(geometry, sliceBox);
-          plb_ifstream geometryFile(fNameIn.c_str());
-          for (plint iX=0; iX<nx-1; ++iX) {
-            if (!geometryFile.is_open()) {
-              pcout << "Error: could not open geometry file " << fNameIn << std::endl;
-              exit(EXIT_FAILURE);
-            }
+    Box3D domain(3, 4, 0, ny-1, 0, nz-1);
+    T meanU1 = computeAverage(*computeVelocityComponent(lattice_fluid1, domain, xComponent));
+    pcout << "Average velocity for fluid1 in x direction    = "<< meanU1<<std::endl;
+    return meanU1;
+}
+
+
+T computeVelocity_f2(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid2, T nu_f2)
+{
+    plint xComponent = 0;
+    const plint nx = lattice_fluid2.getNx();
+    const plint ny = lattice_fluid2.getNy();
+    const plint nz = lattice_fluid2.getNz();
+
+    Box3D domain(3, nx-4, 0, ny-1, 0, nz-1);
+    T meanU2 = computeAverage(*computeVelocityComponent(lattice_fluid2, domain, xComponent));
+    pcout << "Average velocity for fluid2 in x direction    = " << meanU2            << std::endl;
+    return meanU2;
+}
+
+
+void readGeometry(std::string fNameIn, std::string fNameOut, 
+                  MultiScalarField3D<int>& geometry)
+{
+    const plint nx = geometry.getNx();
+    const plint ny = geometry.getNy();
+    const plint nz = geometry.getNz();
+
+    Box3D sliceBox(0,0, 0,ny-1, 0,nz-1);
+    std::unique_ptr<MultiScalarField3D<int> > slice = generateMultiScalarField<int>(geometry, sliceBox);
+    plb_ifstream geometryFile(fNameIn.c_str());
+    for (plint iX=0; iX<nx-1; ++iX) {
+        if (!geometryFile.is_open()) {
+            pcout << "Error: could not open geometry file " << fNameIn << std::endl;
+            exit(EXIT_FAILURE);
+        }
             geometryFile >> *slice;
             copy(*slice, slice->getBoundingBox(), geometry, Box3D(iX,iX, 0,ny-1, 0,nz-1));
-          }
+    }
 
-          {
-            VtkImageOutput3D<T> vtkOut("porousMedium", 1.0);
-            vtkOut.writeData<float>(*copyConvert<int,T>(geometry, geometry.getBoundingBox()), "tag", 1.0);
-          }
+    {
+        VtkImageOutput3D<T> vtkOut("porousMedium", 1.0);
+        vtkOut.writeData<float>(*copyConvert<int,T>(geometry, geometry.getBoundingBox()), "tag", 1.0);
+    }
 
-          {
-            std::unique_ptr<MultiScalarField3D<T> > floatTags = copyConvert<int,T>(geometry, geometry.getBoundingBox());
-            std::vector<T> isoLevels;
-            isoLevels.push_back(0.5);
-            typedef TriangleSet<T>::Triangle Triangle;
-            std::vector<Triangle> triangles;
-            Box3D domain = floatTags->getBoundingBox().enlarge(-1);
-            domain.x0++;
-            domain.x1--;
-            isoSurfaceMarchingCube(triangles, *floatTags, isoLevels, domain);
-            TriangleSet<T> set(triangles);
-            std::string outDir = fNameOut + "/";
-            set.writeBinarySTL(outDir + "porousMedium.stl");
-          }
-        }
-
-
-        void setboundaryvalue(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
-	                      MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid2,
-	                      Box3D inlet, Box3D outlet,
-	                      T rho_f1_inlet, T rho_f2_outlet, T rhoNoFluid) {
-
-	          setBoundaryDensity(lattice_fluid1, inlet, rho_f1_inlet);
-	          setBoundaryDensity(lattice_fluid2, inlet, rhoNoFluid);
-	          setBoundaryDensity(lattice_fluid1, outlet, rhoNoFluid);
-	          setBoundaryDensity(lattice_fluid2, outlet, rho_f2_outlet);
-
-	        }
-
-        void PorousMediaSetup(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
-          MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid2,
-          MultiScalarField3D<int>& geometry,
-          OnLatticeBoundaryCondition3D<T,DESCRIPTOR>* boundaryCondition,
-          Box3D inlet, Box3D outlet,
-          T rhoNoFluid, T rho_f1, T rho_f2, T Gads_f1_s1, T Gads_f1_s2,
-          T Gads_f1_s3, T Gads_f1_s4, T force_f1, T force_f2,
-          T nx1_f1, T nx2_f1, T ny1_f1, T ny2_f1, T nz1_f1, T nz2_f1, T nx1_f2,
-          T nx2_f2, T ny1_f2, T ny2_f2, T nz1_f2, T nz2_f2, T runs,
-          bool load_state, bool print_geom, bool use_plb_bc)
-          {
-
-            plint nx = lattice_fluid2.getNx();
-            plint ny = lattice_fluid2.getNy();
-            plint nz = lattice_fluid2.getNz();
+    {
+        std::unique_ptr<MultiScalarField3D<T> > floatTags = copyConvert<int,T>(geometry, geometry.getBoundingBox());
+        std::vector<T> isoLevels;
+        isoLevels.push_back(0.5);
+        typedef TriangleSet<T>::Triangle Triangle;
+        std::vector<Triangle> triangles;
+        Box3D domain = floatTags->getBoundingBox().enlarge(-1);
+        domain.x0++;
+        domain.x1--;
+        isoSurfaceMarchingCube(triangles, *floatTags, isoLevels, domain);
+        TriangleSet<T> set(triangles);
+        std::string outDir = fNameOut + "/";
+        set.writeBinarySTL(outDir + "porousMedium.stl");
+    }
+}
 
 
-            pcout << "Definition of the geometry." << endl;
+void setboundaryvalue(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
+	                  MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid2,
+	                  Box3D inlet, Box3D outlet, T rho_f1_inlet, 
+	                  T rho_f2_outlet, T rhoNoFluid) 
+{
 
-            Array<T, 3> zeroVelocity(0., 0., 0.);
-            if (use_plb_bc==true){
-              boundaryCondition->addPressureBoundary0N(inlet, lattice_fluid1);
-              boundaryCondition->addPressureBoundary0N(inlet, lattice_fluid2);
-              // I'll hard code the numbers for now
-              setBoundaryDensity(lattice_fluid1, inlet, 2.0);
-              setBoundaryDensity(lattice_fluid2, inlet, 0.6);
+    setBoundaryDensity(lattice_fluid1, inlet, rho_f1_inlet);
+    setBoundaryDensity(lattice_fluid2, inlet, rhoNoFluid);
+    setBoundaryDensity(lattice_fluid1, outlet, rhoNoFluid);
+    setBoundaryDensity(lattice_fluid2, outlet, rho_f2_outlet);
 
-              boundaryCondition->addPressureBoundary0P(outlet, lattice_fluid1);
-              boundaryCondition->addPressureBoundary0P(outlet, lattice_fluid2);
-              setBoundaryDensity(lattice_fluid1, outlet, 0.6);
-              setBoundaryDensity(lattice_fluid2, outlet, 2.0);
-              delete boundaryCondition;
-            }
+}
 
-            if (load_state == true) {
-              pcout << "Loading saved lattice data...";
-              loadBinaryBlock(lattice_fluid1, "tmp/lattice1.dat");
-              loadBinaryBlock(lattice_fluid2, "tmp/lattice2.dat");
-	          plb_ifstream ifile("tmp/runnum.dat");
+
+void PorousMediaSetup(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
+                      MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid2,
+                      MultiScalarField3D<int>& geometry,
+                      OnLatticeBoundaryCondition3D<T,
+                      DESCRIPTOR>* boundaryCondition, Box3D inlet, Box3D outlet,
+                      T rhoNoFluid, T rho_f1, T rho_f2, T Gads_f1_s1,
+                      T Gads_f1_s2, T Gads_f1_s3, T Gads_f1_s4, T force_f1,
+                      T force_f2, T nx1_f1, T nx2_f1, T ny1_f1, T ny2_f1,
+                      T nz1_f1, T nz2_f1, T nx1_f2, T nx2_f2, T ny1_f2,
+                      T ny2_f2, T nz1_f2, T nz2_f2, T runs, bool load_state, 
+                      bool print_geom, bool use_plb_bc)
+{
+
+    plint nx = lattice_fluid2.getNx();
+    plint ny = lattice_fluid2.getNy();
+    plint nz = lattice_fluid2.getNz();
+
+    pcout << "Definition of the geometry." << endl;
+
+    Array<T, 3> zeroVelocity(0., 0., 0.);
+    
+    if (use_plb_bc==true){
+        boundaryCondition->addPressureBoundary0N(inlet, lattice_fluid1);
+        boundaryCondition->addPressureBoundary0N(inlet, lattice_fluid2);
+        // I'll hard code the numbers for now
+        setBoundaryDensity(lattice_fluid1, inlet, 2.0);
+        setBoundaryDensity(lattice_fluid2, inlet, 0.6);
+
+        boundaryCondition->addPressureBoundary0P(outlet, lattice_fluid1);
+        boundaryCondition->addPressureBoundary0P(outlet, lattice_fluid2);
+        setBoundaryDensity(lattice_fluid1, outlet, 0.6);
+        setBoundaryDensity(lattice_fluid2, outlet, 2.0);
+        delete boundaryCondition;
+    }
+
+    if (load_state == true) {
+        pcout << "Loading saved lattice data...";
+        loadBinaryBlock(lattice_fluid1, "tmp/lattice1.dat");
+        loadBinaryBlock(lattice_fluid2, "tmp/lattice2.dat");
+	    plb_ifstream ifile("tmp/runnum.dat");
 	      
-	          if (ifile.is_open()) {
+	    if (ifile.is_open()) {
 		      ifile >> runs;
-		      }
+		}
 	          
-	          pcout << "Done!" << endl;
-            }
+	    pcout << "Done!" << endl;
+    }
 
-            //if (load_state == false) {
-              // NoDynamics (computational efficency, labeled with 2)
-              defineDynamics(lattice_fluid1, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
-              defineDynamics(lattice_fluid2, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
-            //}
+    //if (load_state == false) {
+    // NoDynamics (computational efficency, labeled with 2)
+    defineDynamics(lattice_fluid1, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
+    defineDynamics(lattice_fluid2, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
+    //}
             
-              // First contact angle (labeled with 1)
-              defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s1), 1);
-              defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s1), 1);
+    // First contact angle (labeled with 1)
+    defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s1), 1);
+    defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s1), 1);
 
 
-              // Second contact angle (labeled with 3)
-              defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s2), 3);
-              defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s2), 3);
+    // Second contact angle (labeled with 3)
+    defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s2), 3);
+    defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s2), 3);
 
-              // Mesh contact angle (labeled with 4). Neutral wet
-              defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( 0), 4);
-              defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>( 0), 4);
+    // Mesh contact angle (labeled with 4). Neutral wet
+    defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( 0), 4);
+    defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>( 0), 4);
 
-              // Third contact angle (labeled with 4)
-              defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s3), 5);
-              defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s3), 5);
+    // Third contact angle (labeled with 4)
+    defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s3), 5);
+    defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s3), 5);
 
-              // Fourth contact angle (labeled with 5)
-              defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s4), 6);
-              defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s4), 6);
+    // Fourth contact angle (labeled with 5)
+    defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s4), 6);
+    defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s4), 6);
 
-              //Array<T, 3> zeroVelocity(0., 0., 0.);
+    //Array<T, 3> zeroVelocity(0., 0., 0.);
               
 
-              if (load_state == false) {
-              pcout << "Initializing Fluids" << endl;
+    if (load_state == false) {
+        pcout << "Initializing Fluids" << endl;
 
-              initializeAtEquilibrium(lattice_fluid2, Box3D(nx1_f2-1, nx2_f2-1,
-                                                            ny1_f2-1, ny2_f2-1,
-                                                            nz1_f2-1, nz2_f2-1),
-                                                            rho_f2, zeroVelocity);
+        initializeAtEquilibrium(lattice_fluid2, Box3D(nx1_f2-1, nx2_f2-1,
+                                                      ny1_f2-1, ny2_f2-1,
+                                                      nz1_f2-1, nz2_f2-1),
+                                                      rho_f2, zeroVelocity);
 
-              initializeAtEquilibrium(lattice_fluid1, Box3D(nx1_f2-1, nx2_f2-1,
-                                                            ny1_f2-1, ny2_f2-1,
-                                                            nz1_f2-1, nz2_f2-1),
-                                                            rhoNoFluid, zeroVelocity);
+        initializeAtEquilibrium(lattice_fluid1, Box3D(nx1_f2-1, nx2_f2-1,
+                                                      ny1_f2-1, ny2_f2-1,
+                                                      nz1_f2-1, nz2_f2-1),
+                                                      rhoNoFluid, zeroVelocity);
 
-              initializeAtEquilibrium(lattice_fluid1, Box3D(nx1_f1, nx2_f1,
-                                                            ny1_f1, ny2_f1,
-                                                            nz1_f1, nz2_f1),
-                                                            rho_f1, zeroVelocity);
+        initializeAtEquilibrium(lattice_fluid1, Box3D(nx1_f1, nx2_f1,
+                                                      ny1_f1, ny2_f1,
+                                                      nz1_f1, nz2_f1),
+                                                      rho_f1, zeroVelocity);
 
-              initializeAtEquilibrium(lattice_fluid2, Box3D(nx1_f1, nx2_f1,
-                                                            ny1_f1, ny2_f1,
-                                                            nz1_f1, nz2_f1),
-                                                            rhoNoFluid, zeroVelocity);
+        initializeAtEquilibrium(lattice_fluid2, Box3D(nx1_f1, nx2_f1,
+                                                      ny1_f1, ny2_f1,
+                                                      nz1_f1, nz2_f1),
+                                                      rhoNoFluid, zeroVelocity);
 
 
 
-            setExternalVector(lattice_fluid1, lattice_fluid1.getBoundingBox(),
-            DESCRIPTOR<T>::ExternalField::forceBeginsAt, Array<T, 3>(force_f1, 0., 0.));
-            setExternalVector(lattice_fluid2, lattice_fluid2.getBoundingBox(),
-            DESCRIPTOR<T>::ExternalField::forceBeginsAt, Array<T, 3>(force_f2, 0., 0.));
+        setExternalVector(lattice_fluid1, lattice_fluid1.getBoundingBox(),
+        DESCRIPTOR<T>::ExternalField::forceBeginsAt, Array<T, 3>(force_f1, 0., 0.));
+        setExternalVector(lattice_fluid2, lattice_fluid2.getBoundingBox(),
+        DESCRIPTOR<T>::ExternalField::forceBeginsAt, Array<T, 3>(force_f2, 0., 0.));
 
-            lattice_fluid1.initialize();
-            lattice_fluid2.initialize();
-          }
+        lattice_fluid1.initialize();
+        lattice_fluid2.initialize();
+    }
 
-            // Output geometry dynamics
-            if (print_geom == true) {
-              VtkImageOutput3D<int> vtkOut(createFileName("vtkgeometry", 1, 1), 1.);
-              vtkOut.writeData<int>(geometry, "Dynamics", 1.);
-              pcout << "Creating geometry vtk file" << endl;
-            }
+    // Output geometry dynamics
+    if (print_geom == true) {
+        VtkImageOutput3D<int> vtkOut(createFileName("vtkgeometry", 1, 1), 1.);
+        vtkOut.writeData<int>(geometry, "Dynamics", 1.);
+        pcout << "Creating geometry vtk file" << endl;
+    }
+}
 
-          }
 
-          int main(int argc, char* argv[])
-          {
-            // 1. Declaring the variables
-            clock_t t;
-            t = clock();
-            plbInit(&argc, &argv);
+int main(int argc, char* argv[])
+{
+    // 1. Declaring the variables
+    clock_t t;
+    t = clock();
+    plbInit(&argc, &argv);
 
-            bool load_state ;
-            std::string fNameOut ;
-            std::string fNameIn  ;
-            plint nx, ny, nz;
+    bool load_state;
+    std::string fNameOut;
+    std::string fNameIn;
+    plint nx, ny, nz;
 
-            bool use_plb_bc;  //
-            bool px_f1, py_f1, pz_f1, px_f2, py_f2, pz_f2; //periodicity
-            bool pressure_bc;
-            plint nx1_f1, nx2_f1, ny1_f1, ny2_f1, nz1_f1, nz2_f1; //fluid1 configuration
-            plint nx1_f2, nx2_f2, ny1_f2, ny2_f2, nz1_f2, nz2_f2; //fluid2 configuration
+    bool use_plb_bc;
+    bool px_f1, py_f1, pz_f1, px_f2, py_f2, pz_f2; //periodicity
+    bool pressure_bc;
+    plint nx1_f1, nx2_f1, ny1_f1, ny2_f1, nz1_f1, nz2_f1; //fluid1 configuration
+    plint nx1_f2, nx2_f2, ny1_f2, ny2_f2, nz1_f2, nz2_f2; //fluid2 configuration
 
-            T G ;
+    T G ;
             T omega_f1 ;
             T omega_f2 ;
             T force_f1 ;
