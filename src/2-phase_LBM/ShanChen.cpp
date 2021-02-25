@@ -218,19 +218,20 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
               pcout << "Loading saved lattice data...";
               loadBinaryBlock(lattice_fluid1, "tmp/lattice1.dat");
               loadBinaryBlock(lattice_fluid2, "tmp/lattice2.dat");
-	      plb_ifstream ifile("tmp/runnum.dat");
+	          plb_ifstream ifile("tmp/runnum.dat");
 	      
-	      if (ifile.is_open()) {
-		ifile >> runs;
-		}
-	      pcout << "Done!" << endl;
+	          if (ifile.is_open()) {
+		      ifile >> runs;
+		      }
+	          
+	          pcout << "Done!" << endl;
             }
 
-            if (load_state == false) {
+            //if (load_state == false) {
               // NoDynamics (computational efficency, labeled with 2)
               defineDynamics(lattice_fluid1, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
               defineDynamics(lattice_fluid2, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
-            }
+            //}
             
               // First contact angle (labeled with 1)
               defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s1), 1);
@@ -781,12 +782,13 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
 
                     for (plint runs = 1; runs <= runnum; ++runs) {
 
-                      pcout << "Run    = " << runs       << std::endl;
-                      pcout << "Pressure difference =  " << deltaP[runs] << std::endl;
+                      pcout << "Run    = " << runs       << endl;
+                      pcout << "Pressure difference =  " << deltaP[runs] << endl;
 
                       ofile << "Run = " << runs << "\n" << endl;
                       ofile << "Pressure difference = " << deltaP[runs] <<"\n" << endl;
 
                     }
+                    return 0;
                   }
 

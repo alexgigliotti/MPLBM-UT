@@ -54,7 +54,7 @@
     <!-- Initial Density of fluid 2 at the outlet -->
     <rho_f2_i> 2 </rho_f2_i>
     <!-- Final density of fluid 2 at the outlet (after n-steps) -->
-    <rho_f2_f> 1.7 </rho_f2_f>
+    <rho_f2_f> 1.9 </rho_f2_f>
     <!-- Dissolved density of one phase in the other (both f1 and f2) -->
     <rho_d> 0.06 </rho_d>
     <!-- Decrement in outlet density -->
@@ -70,7 +70,7 @@
     <!-- Convergence criteron (density change) -->
     <convergence> 0.05 </convergence>
     <!-- Max iterations per Pc step -->
-    <it_max> 200 </it_max>
+    <it_max> 10 </it_max>
     <!-- Check for convergence every -->
     <it_conv> 100 </it_conv>
     <!-- Print density gifs -->

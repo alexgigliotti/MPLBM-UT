@@ -26,7 +26,7 @@ geom.num_slices = 4;    % add n empty slices at the beggining and end of domain
 geom.swapXZ     = true;     % Swap x and z data if needed to ensure Palabos simulation in Z-direction              
 geom.scale_2    = false;   % Double the grain (pore) size if needed to prevent single pixel throats
                    % for tight/ low porosity geometries (Only in MATLAB)                   
-
+                   
 palabos_3Dmat   = create_geom_edist(fp_printing,geom);  
                                     %provides a very  efficient 
                                     %geometry for Palabos
