@@ -9,12 +9,12 @@
 #include <cmath>
 #include <time.h>
 #include <stdexcept>
-#include <mpi.h>
 
 using namespace plb;
 using namespace std;
 
 typedef double T; // Use double-precision arithmetics
+
 // Use a grid which additionally to the f's stores two variables for the external force term.
 #define DESCRIPTOR descriptors::ForcedShanChenD3Q19Descriptor
 
@@ -38,6 +38,9 @@ void writeGif_f1(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
     ImageWriter<T> imageWriter("leeloo.map");
     imageWriter.writeScaledGif(createFileName(im_name, iT, 8),
     *computeDensity(lattice_fluid1, slice), imSize, imSize);
+    
+    pcout << "after return 42???" << endl;
+    return;
 }
 
 
@@ -46,6 +49,9 @@ void writeVTK_vel(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid1, plint runs)
     VtkImageOutput3D<T> vtkOut(createFileName("vtk_vel_rho1_", 1 * runs, 6), 1.);
     vtkOut.writeData<float>(*computeVelocityNorm(lattice_fluid1), "velocityNorm", 1.);
     vtkOut.writeData<3,float>(*computeVelocity(lattice_fluid1), "velocity", 1.);
+    
+    pcout << "after return 52???" << endl;
+    return;
 }
 
 
@@ -68,6 +74,9 @@ void writeGif_f1_y(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
     ImageWriter<T> imageWriter("leeloo.map");
     imageWriter.writeScaledGif(createFileName(im_name, iT, 8),
     *computeDensity(lattice_fluid1, slice), imSize, imSize);
+    
+    pcout << "after return 76???" << endl;
+    return;
 }
 
 
@@ -81,6 +90,9 @@ void writeVTK_rho(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid,
     const plint zcomponent = 0;
     VtkImageOutput3D<double> vtkOut(createFileName(im_name, iter, 8), 1.);
     vtkOut.writeData<double>((*computeDensity(lattice_fluid)), "Density", 1.);
+    
+    pcout << "after return 91???" << endl;    
+    return;
 }
 
 
@@ -99,6 +111,9 @@ void writeVTK_vel(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid,
     const plint zcomponent = 0;
     VtkImageOutput3D<double> vtkOut(createFileName(im_name, iter, 8), 1.);
     vtkOut.writeData<double>((*computeVelocityComponent(lattice_fluid, domain, xComponent)), "Velocity", 1.);
+    
+    pcout << "after return 111???" << endl;
+    return;
 }
 
 
@@ -113,6 +128,8 @@ T computeVelocity_f1(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid1, T nu_f1)
     Box3D domain(3, 4, 0, ny-1, 0, nz-1);
     T meanU1 = computeAverage(*computeVelocityComponent(lattice_fluid1, domain, xComponent));
     pcout << "Average velocity for fluid1 in x direction    = "<< meanU1<<std::endl;
+
+    pcout << "after return 127???" << endl;
     return meanU1;
 }
 
@@ -127,6 +144,8 @@ T computeVelocity_f2(MultiBlockLattice3D<T,DESCRIPTOR>& lattice_fluid2, T nu_f2)
     Box3D domain(3, nx-4, 0, ny-1, 0, nz-1);
     T meanU2 = computeAverage(*computeVelocityComponent(lattice_fluid2, domain, xComponent));
     pcout << "Average velocity for fluid2 in x direction    = " << meanU2            << std::endl;
+    
+    pcout << "after return 140???" << endl;
     return meanU2;
 }
 
@@ -150,25 +169,24 @@ void readGeometry(std::string fNameIn, std::string fNameOut,
             copy(*slice, slice->getBoundingBox(), geometry, Box3D(iX,iX, 0,ny-1, 0,nz-1));
     }
 
-    {
-        VtkImageOutput3D<T> vtkOut("porousMedium", 1.0);
-        vtkOut.writeData<float>(*copyConvert<int,T>(geometry, geometry.getBoundingBox()), "tag", 1.0);
-    }
+    VtkImageOutput3D<T> vtkOut("porousMedium", 1.0);
+    vtkOut.writeData<float>(*copyConvert<int,T>(geometry, geometry.getBoundingBox()), "tag", 1.0);
 
-    {
-        std::unique_ptr<MultiScalarField3D<T> > floatTags = copyConvert<int,T>(geometry, geometry.getBoundingBox());
-        std::vector<T> isoLevels;
-        isoLevels.push_back(0.5);
-        typedef TriangleSet<T>::Triangle Triangle;
-        std::vector<Triangle> triangles;
-        Box3D domain = floatTags->getBoundingBox().enlarge(-1);
-        domain.x0++;
-        domain.x1--;
-        isoSurfaceMarchingCube(triangles, *floatTags, isoLevels, domain);
-        TriangleSet<T> set(triangles);
-        std::string outDir = fNameOut + "/";
-        set.writeBinarySTL(outDir + "porousMedium.stl");
-    }
+    std::unique_ptr<MultiScalarField3D<T> > floatTags = copyConvert<int,T>(geometry, geometry.getBoundingBox());
+    std::vector<T> isoLevels;
+    isoLevels.push_back(0.5);
+    typedef TriangleSet<T>::Triangle Triangle;
+    std::vector<Triangle> triangles;
+    Box3D domain = floatTags->getBoundingBox().enlarge(-1);
+    domain.x0++;
+    domain.x1--;
+    isoSurfaceMarchingCube(triangles, *floatTags, isoLevels, domain);
+    TriangleSet<T> set(triangles);
+    std::string outDir = fNameOut + "/";
+    set.writeBinarySTL(outDir + "porousMedium.stl");
+    
+    pcout << "after return 183???" << endl;
+    return;
 }
 
 
@@ -182,7 +200,9 @@ void setboundaryvalue(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
     setBoundaryDensity(lattice_fluid2, inlet, rhoNoFluid);
     setBoundaryDensity(lattice_fluid1, outlet, rhoNoFluid);
     setBoundaryDensity(lattice_fluid2, outlet, rho_f2_outlet);
-
+    
+    pcout << "after return 198???" << endl;    
+    return;
 }
 
 
@@ -220,7 +240,8 @@ void PorousMediaSetup(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
         setBoundaryDensity(lattice_fluid2, outlet, 2.0);
         delete boundaryCondition;
     }
-
+    
+    // If loading a saved simulation, read run number and load saved state
     if (load_state == true) {
         pcout << "Loading saved lattice data...";
         loadBinaryBlock(lattice_fluid1, "tmp/lattice1.dat");
@@ -233,7 +254,9 @@ void PorousMediaSetup(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
 	          
 	    pcout << "Done!" << endl;
     }
-
+    
+    // Assign masks to label geometry
+    
     // NoDynamics (computational efficency, labeled with 2)
     defineDynamics(lattice_fluid1, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
     defineDynamics(lattice_fluid2, geometry, new NoDynamics<T, DESCRIPTOR>(), 2);
@@ -241,7 +264,6 @@ void PorousMediaSetup(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
     // First contact angle (labeled with 1)
     defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s1), 1);
     defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s1), 1);
-
 
     // Second contact angle (labeled with 3)
     defineDynamics(lattice_fluid1, geometry, new BounceBack<T, DESCRIPTOR>( Gads_f1_s2), 3);
@@ -260,8 +282,7 @@ void PorousMediaSetup(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
     defineDynamics(lattice_fluid2, geometry, new BounceBack<T, DESCRIPTOR>(-Gads_f1_s4), 6);
 
     //Array<T, 3> zeroVelocity(0., 0., 0.);
-              
-
+    
     if (load_state == false) {
         pcout << "Initializing Fluids" << endl;
 
@@ -302,6 +323,9 @@ void PorousMediaSetup(MultiBlockLattice3D<T, DESCRIPTOR>& lattice_fluid1,
         vtkOut.writeData<int>(geometry, "Dynamics", 1.);
         pcout << "Creating geometry vtk file" << endl;
     }
+    
+    pcout << "after return 320???" << endl;
+    return;
 }
 
 
@@ -480,7 +504,7 @@ int main(int argc, char* argv[])
             start_num++;
         }
     }
-    else{
+    else {
         throw std::runtime_error("tmp/runnum.dat not found. Please make sure it exists and contains the current run number!");
     }
             
@@ -571,8 +595,7 @@ int main(int argc, char* argv[])
             pcout << "Using previous simulation state  " << endl;
         }
         // set-up a new simulation domain
-        else{
-        
+        else {
             PorousMediaSetup(lattice_fluid1, lattice_fluid2, geometry,
                 createLocalBoundaryCondition3D<T,DESCRIPTOR>(), inlet, outlet,
                 rhoNoFluid, rho_f1, rho_f2, Gads_f1_s1, Gads_f1_s2, Gads_f1_s3, 
@@ -603,18 +626,6 @@ int main(int argc, char* argv[])
 
             lattice_fluid1.collideAndStream();
             lattice_fluid2.collideAndStream();
-
-            // saves a binary file (heavy) with the sim state
-            // if (save_sim == true && iT % save_it==0 && iT>0)
-            //  {
-            //    pcout << "Saving restart files...";
-            //    pcout << iT << endl;
-            //    pcout << save_it << endl;
-            //    pcout << iT % save_it << endl;
-            //   saveBinaryBlock(lattice_fluid1, Lattice1);
-            //    saveBinaryBlock(lattice_fluid2, Lattice2);
-            //    pcout << "Done!" << endl;
-            //  }
 
             // save gifs
             if (iT % it_gif == 0) {
@@ -690,7 +701,6 @@ int main(int argc, char* argv[])
                     if (rho_vtk == true) {
                         writeVTK_rho(lattice_fluid2, "rho_f2_", runs_str, iT, nx, ny, nz);
                     }
-
                 }
 
                 // saves a .dat file with the run number (for restarting sim)
@@ -747,8 +757,8 @@ int main(int argc, char* argv[])
                 lattice_fluid1.initialize();
                 lattice_fluid2.initialize();
 
-            }
-        }
+            }            
+        }        
     }
 
     std::string output = outDir  + "/output.dat";
@@ -777,6 +787,8 @@ int main(int argc, char* argv[])
 
     }
     
+    pcout << "after return???" << endl;
     return 0;
 }
+
 
